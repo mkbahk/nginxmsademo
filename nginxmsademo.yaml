@@ -1,0 +1,39 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginxmsademo-deploy
+  namespace: ingress-nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      "app": "nginxmsademo"
+  template:
+    metadata:
+      name: nginxmsademo-pod
+      labels:
+        "app": "nginxmsademo"
+    spec:
+      containers:
+      - name: nginxmsademo-container
+        image: mkbahk/nginxmsademo:1.1
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginxmsademo-svc
+  namespace: ingress-nginx
+spec:
+  #clusterIP: x.y.w.z
+  selector:
+    "app": "nginxmsademo"
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+  type: LoadBalancer
+---
+
